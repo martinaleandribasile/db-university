@@ -32,7 +32,7 @@ AND date = '2020/06/20';
 
 6. Selezionare tutti i corsi di laurea magistrale (38)
 
-SELECT count(*) 
+SELECT *
 FROM `degrees`
 WHERE `level` like 'mag%';
 
