@@ -1,0 +1,76 @@
+1. Selezionare tutti gli studenti iscritti al Corso di Laurea in Economia
+
+SELECT a.name , a.surname , b.name
+FROM `students` as A 
+INNER JOIN `degrees` as B
+on A.degree_id = B.id
+WHERE b.name = 'corso di laurea in economia';
+
+2. Selezionare tutti i Corsi di Laurea Magistrale del Dipartimento di Neuroscienze
+
+SELECT a.name , b.name
+FROM `departments` as A 
+INNER JOIN `degrees` as B
+on A.id = B.department_id
+WHERE (a.name like "%neuro%") 
+AND B.level = 'magistrale';
+
+3. Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
+
+SELECT C.name as corso, T.name, T.surname
+FROM `course_teacher` as CT
+INNER JOIN `teachers` as T 
+ON T.id = CT.teacher_id
+INNER JOIN  `courses`as C
+ON C.id = CT.course_id
+WHERE CT.teacher_id = 44;
+
+4. Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e il
+relativo dipartimento, in ordine alfabetico per cognome e nome
+
+SELECT  s.*,dep.*,d.*
+FROM `degrees` as D
+INNER JOIN `students` as S
+ON s.degree_id = D.id 
+INNER JOIN `departments` as dep 
+ON d.department_id = dep.id
+ORDER BY s.surname,s.name;
+
+5. Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
+
+SELECT D. * , C.`name` as nome_corso, T.name, T.surname
+FROM `degrees` as D
+JOIN `courses` as C
+ON D.`id`= C.`degree_id` 
+JOIN `course_teacher` as CT
+ON C.`id`= CT.`course_id` 
+JOIN `teachers` as T 
+ON CT.`teacher_id`= T.`id` 
+ORDER BY C.`id`;
+
+6. Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54)
+
+SELECT DISTINCT `teachers`.`name`, `teachers`.`surname` , `departments` . `name`
+FROM `teachers` 
+JOIN `course_teacher` 
+ON `teachers`.`id`=`course_teacher`.`teacher_id`
+JOIN `courses` 
+ON `course_teacher`.`course_id`=`courses`.`id`
+JOIN `degrees` 
+ON `courses`.`degree_id`= `degrees`.`id`
+JOIN `departments` 
+ON `degrees`.`department_id`=`departments`.`id`
+WHERE `departments`.`name`='Dipartimento di Matematica';
+
+7. BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per
+superare ciascuno dei suoi esami
+
+SELECT S.`name`, S.`surname`, IF(COUNT(C.`name`)>1, concat(count(C.name),' tentativi'), '1 tentativo') AS 'Tentativi', C.`name` AS 'Nome Corso'
+FROM `students` S
+JOIN `exam_student` ES
+ON S.`id` = ES.`student_id`
+JOIN `exams` E
+ON E.`id` = ES.`exam_id`
+JOIN `courses` C
+ON C.`id` = E.`course_id`
+GROUP BY S.`name`, S.`surname`, C.`name`;
