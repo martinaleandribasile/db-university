@@ -52,7 +52,9 @@
                 echo '<div class="w-100 text-center p-5">I parametri inseriti non sono presenti nel database</div>';
             }
         }
-    }; ?>
+    };
+    $conn->close()
+    ?>
     <form action="index.html" class="d-flex justify-content-center my-4">
         <button class="btn btn-danger">Ritorna alla pagina iniziale</button>
     </form>
